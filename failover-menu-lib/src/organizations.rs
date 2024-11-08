@@ -7,7 +7,7 @@ use std::env;
 
 use log::{debug, error, info};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Organization {
     #[serde(rename = "responseType")]
     pub response_type: String,
@@ -91,6 +91,9 @@ pub fn get_organizations(organizations_response: Result<OrganizationsResponse>) 
     }
 }
 
-pub fn get_main_organization(organizations_response: &OrganizationsResponse) -> Option<&Organization> {
-    organizations_response.organizations.first()
+pub async fn get_main_organization(client: &OpenApiClient) -> Organization {
+    let organizations_response = fetch_organizations(&client).await;
+    let orgs = get_organizations(organizations_response);
+    let org = orgs.first().unwrap().clone();
+    return org;
 }

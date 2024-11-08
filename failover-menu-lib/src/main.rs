@@ -26,12 +26,9 @@ async fn main() -> Result<()> {
         .context("Failed to create API client")?;
     
     println!("Fetching organizations...");
-    let organizations_response = fetch_organizations(&client).await;
     
-    let orgs = get_organizations(organizations_response);
-    let org = orgs.first().unwrap();
-
-    print_organization(org);
+    let org = get_main_organization(&client).await;
+    print_organization(&org);
 
     log::debug!("FINISHED");
 
